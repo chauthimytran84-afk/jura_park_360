@@ -1,35 +1,62 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=no, minimum-scale=1.0, maximum-scale=1.0">
-    <title>WebAR Mô Hình Chim - AR.js</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-  </head>
-  <body style="margin: 0px; overflow: hidden;">
-    
-    <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
-      
-      <a-assets>
-        <a-asset-item id="bird-obj" src="./assets/12274_Lizard_v1_l2.obj"></a-asset-item>
-        <a-asset-item id="bird-mtl" src="./assets/12274_Lizard_v1_l2.mtl"></a-asset-item>
-      </a-assets>
-      
-      <a-marker preset="hiro">
-        
-        <a-obj-model 
-          src="#bird-obj" 
-          mtl="#bird-mtl" 
-          position="0 0 0" 
-          scale="0.05 0.05 0.05" 
-          rotation="-90 0 0">
-        </a-obj-model>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nobita's House 360° VR Experience</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; font-family: sans-serif; }
+        #welcome-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: white; text-align: center;
+        }
+        .play-btn {
+            padding: 15px 35px; font-size: 1.2rem; font-weight: bold; color: #333;
+            background-color: #ffde00; border: none; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px;
+        }
+        #ui-instruction {
+            position: absolute; bottom: 20px; left: 20px; z-index: 100;
+            background: rgba(0, 0, 0, 0.6); color: white; padding: 8px 15px;
+            border-radius: 20px; font-size: 0.9rem; display: none;
+        }
+    </style>
+</head>
+<body>
 
-      </a-marker>
-      
-      <a-entity camera></a-entity>
-      
+    <div id="welcome-overlay">
+        <h1>KHÁM PHÁ NGÔI NHÀ NOBITA 360°</h1>
+        <p>Sử dụng chuột hoặc xoay điện thoại để thay đổi góc nhìn VR</p>
+        <button class="play-btn" id="start-tour-btn">BẮT ĐẦU THAM QUAN</button>
+    </div>
+
+    <div id="ui-instruction">🖱️ Kéo chuột hoặc nghiêng thiết bị để xoay 360°</div>
+
+    <a-scene loading-screen="enabled: false">
+        <a-assets>
+            <video id="nobita-video" src="kỷ jura.mp4" loop crossorigin="anonymous" playsinline></video>
+        </a-assets>
+        <a-videosphere src="#nobita-video" rotation="0 -90 0"></a-videosphere>
+        <a-camera user-height="0"></a-camera>
     </a-scene>
-  </body>
+
+    <script>
+        document.getElementById('start-tour-btn').addEventListener('click', function() {
+            const overlay = document.getElementById('welcome-overlay');
+            const instruction = document.getElementById('ui-instruction');
+            const video = document.getElementById('nobita-video');
+
+            video.play().then(() => {
+                overlay.style.display = 'none';
+                instruction.style.display = 'block';
+            }).catch((error) => {
+                console.error("Lỗi phát video:", error);
+                overlay.style.display = 'none';
+            });
+        });
+    </script>
+</body>
 </html>
